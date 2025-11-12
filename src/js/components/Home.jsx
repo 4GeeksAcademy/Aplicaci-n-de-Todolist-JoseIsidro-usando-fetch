@@ -33,7 +33,8 @@ const Home = () => {
 	}
 
 	function eliminar(id) {
-		fetch(`https://playground.4geeks.com/todo/todos/${id}`, { method: "DELETE" })
+		fetch(`https://playground.4geeks.com/todo/todos/${id}`, { 
+			method: "DELETE" })
 		.then(response =>{
 			if(response.ok)setList(list.filter((item) => item.id !== id))
 			});
@@ -57,12 +58,12 @@ const Home = () => {
 				{list.map((item) => (
 					<li className="list-group-item d-flex justify-content-between list-group-item-action px-5" key={item.id}>
 						<p className="fs-3 text-secondary my-auto">{item.label}</p>
-						<button type="button" class="btn-close my-auto" aria-label="Close" onClick={() => eliminar(item.id)}></button>
+						<button type="button" className="btn-close my-auto" aria-label="Close" onClick={() => eliminar(item.id)}></button>
 					</li>
 				))}
 
 				<li className="list-group-item">
-					<small class="text-body-secondary">{list.length} item left</small>
+					<small className="text-body-secondary">{list.length} item left</small>
 
 				</li>
 			</ul>
