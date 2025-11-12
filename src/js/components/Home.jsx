@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 //include images into your bundle
 import rigoImage from "../../img/rigo-baby.jpg";
@@ -7,17 +7,36 @@ import rigoImage from "../../img/rigo-baby.jpg";
 const Home = () => {
 	const [list, setList] = useState([]);
 	const [tarea, setTarea] = useState('');
+	useEffect(() => {
+		fetch("https://playground.4geeks.com/todo/users/alonso")
+			.then(resp => resp.json())
+			.then(data => {
+				console.log("Tareas obtenidas:", data.todos);
+				setList(data.todos);
+			});
+
+	}, [])
 
 	const nuevaTarea = (e) => {
 		if (e.key === "Enter" && tarea.trim() !== "") {
-			setList([...list, tarea]);
-			return setTarea('')
+			const nueva = { label: tarea, is_done: false };
+
+			fetch(`https://playground.4geeks.com/todo/todos/alonso`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(nueva)
+			})
+				.then(resp => resp.json())
+				.then(data => setList([...list, data]))
+				.finally(() => setTarea(""));
 		}
-		
 	}
-	function eliminar(idEliminar) {
-		let filtroDelist = list.filter((_, index) => index !== idEliminar);
-		setList(filtroDelist);
+
+	function eliminar(id) {
+		fetch(`https://playground.4geeks.com/todo/todos/${id}`, { method: "DELETE" })
+		.then(response =>{
+			if(response.ok)setList(list.filter((item) => item.id !== id))
+			});
 	}
 
 	return (
@@ -35,16 +54,16 @@ const Home = () => {
 				</li>
 
 
-				{list.map((item, id) => (
-					<li className="list-group-item d-flex justify-content-between list-group-item-action px-5" key={id}>
-						<p className="fs-3 text-secondary my-auto">{item}</p>
-						<button type="button" class="btn-close my-auto" aria-label="Close" onClick={() => eliminar(id)}></button>
+				{list.map((item) => (
+					<li className="list-group-item d-flex justify-content-between list-group-item-action px-5" key={item.id}>
+						<p className="fs-3 text-secondary my-auto">{item.label}</p>
+						<button type="button" class="btn-close my-auto" aria-label="Close" onClick={() => eliminar(item.id)}></button>
 					</li>
 				))}
 
 				<li className="list-group-item">
 					<small class="text-body-secondary">{list.length} item left</small>
-					
+
 				</li>
 			</ul>
 		</div >
