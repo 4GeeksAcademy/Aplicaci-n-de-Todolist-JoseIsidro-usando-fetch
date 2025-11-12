@@ -13,8 +13,8 @@ const Home = () => {
 			.then(data => {
 				console.log("Tareas obtenidas:", data.todos);
 				setList(data.todos);
-			});
-
+			})
+			.catch(error => console.log(error))
 	}, [])
 
 	const nuevaTarea = (e) => {
@@ -28,6 +28,7 @@ const Home = () => {
 			})
 				.then(resp => resp.json())
 				.then(data => setList([...list, data]))
+				.catch(error => console.log(error))
 				.finally(() => setTarea(""));
 		}
 	}
@@ -37,7 +38,8 @@ const Home = () => {
 			method: "DELETE" })
 		.then(response =>{
 			if(response.ok)setList(list.filter((item) => item.id !== id))
-			});
+			})
+		.catch(error => console.log(error))
 	}
 
 	return (
@@ -58,7 +60,7 @@ const Home = () => {
 				{list.map((item) => (
 					<li className="list-group-item d-flex justify-content-between list-group-item-action px-5" key={item.id}>
 						<p className="fs-3 text-secondary my-auto">{item.label}</p>
-						<button type="button" className="btn-close my-auto" aria-label="Close" onClick={() => eliminar(item.id)}></button>
+						<button type="button" className="btn my-auto boton border border-0" aria-label="Close" onClick={() => eliminar(item.id)}>❌</button>
 					</li>
 				))}
 

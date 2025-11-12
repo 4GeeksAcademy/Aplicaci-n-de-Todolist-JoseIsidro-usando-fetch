@@ -15,3 +15,9 @@ body{
 h1{
   font-size: 100px;
 }
+.boton{
+  opacity: 0;
+}
+.boton:hover{
+  opacity: 1;
+}
